@@ -43,7 +43,7 @@ public class AttendController {
         result.put("complete",complete);
         //未签到
         List<Attend> incomplete = attendService.findAllBySign(0);
-        result.put("incomplete",incomplete);
+        result.put("incomplete",incomplete)  ;
         return result;
     }
 }
