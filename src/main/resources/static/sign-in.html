@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>签到页面</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+
+    请输入你的姓名:<input type="text" id="name"/>
+    <input type="button" id="sign" value="签到"/>
+
+</body>
+<script type="text/javascript">
+
+    $(function () {
+        $("body").on("click","#sign",function(){
+
+            $.ajax({
+                type:"get",
+                url:"/sign",
+                data:{"name":$("#name").val()},
+                success:function(data){
+                    console.log(data);
+                    if(data=="ok"){
+                        alert("签到成功，返回签到页面")
+                        //刷新当前页面
+                        location.reload();
+                    }else {
+                        alert("签到成功，请重新签到")
+                    }
+                }
+            });
+        })
+    })
+
+</script>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>考勤管理页面</title>
+    <style>
+        #complete,#incomplete{
+            width: 50%;
+            float: left;
+        }
+    </style>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+
+    <h3>导入名单</h3>
+    班级名称：
+    <input type="text" name="classes" id="classes"/>
+    请选择导入文件
+    <input type="file" name="nameList" id="nameList"/>
+    <input type="button" id="upload" value="上传">
+    <hr/>
+
+    <div id="incomplete">
+        <h3>未签到的</h3>
+        <p></p>
+
+    </div>
+
+    <div id="complete">
+        <h3>已签到</h3>
+        <p></p>
+    </div>
+
+</body>
+<script type="text/javascript">
+
+    $(function () {
+        //初始化页面查询结果
+        $.ajax({
+            type:"get",
+            url:"/list",
+            success:function(data){
+                console.log(data);
+                var complete ="";
+                var incomplete ="";
+
+                $.each(data.complete,function (index,object) {
+                    complete +=  object.id +"&nbsp;" +object.name +"<br/>";
+                })
+                $("#complete p").html(complete);
+                $.each(data.incomplete,function (index,object) {
+                    incomplete +=  object.id +"&nbsp;" +object.name +"<br/>";
+                })
+                $("#incomplete p").html(incomplete);
+
+            }
+        });
+
+
+        $("body").on("click","#upload",function(){
+            //将数据打包到formData对象中
+            var formData = new FormData();
+            formData.append("classes",$("#classes").val());
+            formData.append("nameListExcel",$("#nameList")[0].files[0]);
+
+            $.ajax({
+                type:"post",
+                url:"/upload",
+                //dataType:"json",
+                data:formData,
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    console.log(data);
+                    if(data=="ok"){
+                        alert("上传成功，即将刷新页面")
+                        //刷新当前页面
+                        location.reload();
+                    }else {
+                        alert("上传失败，请重新上传")
+                    }
+                }
+            });
+        })
+    })
+
+</script>
+</html>
